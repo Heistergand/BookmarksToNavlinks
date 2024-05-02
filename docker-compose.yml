@@ -1,0 +1,7 @@
+services:
+  bot:
+    container_name: BookmarksToNavlinks
+    build: .
+    volumes:
+      - .:/app
+    command: python bookmarks2navlinkBot.py
