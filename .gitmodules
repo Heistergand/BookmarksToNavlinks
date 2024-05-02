@@ -1,0 +1,3 @@
+[submodule "ingrex_lib"]
+	path = ingrex_lib
+	url = git@github.com:Heistergand/ingrex_lib.git
