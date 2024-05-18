@@ -21,7 +21,7 @@ from telegram.ext import (
     filters
 )
 
-from ingrex_lib import ingrex
+# from ingrex_lib import ingrex
 
 from collections import OrderedDict
 
@@ -69,13 +69,26 @@ async def get_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await context.bot.send_message(chat_id=update.message.chat_id, text=f"Your Chat ID: {update.message.chat_id}")
     logging.debug("ID command processed.")
 
+
+def calc_dist_hires(lat1, lng1, lat2, lng2):
+    lat1, lng1, lat2, lng2 = map(radians, [lat1, lng1, lat2, lng2])
+    km = 6378.137 * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lng2 - lng1))
+    # dlat = lat1 - lat2
+    # dlng = lng1 - lng2
+    # a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlng/2)**2
+    # c = 2* asin(sqrt(a))
+    # m = 6367.0 * c * 1000
+    m = km * 1000
+    return round(m)
+
+
 def calc_dist(lat: float, lon: float, lat2: float, lng2: float) -> float:
     """Calculate the distance between two coordinates."""
     lat1 = float(lat)
     lng1 = float(lon)
     lat2 = float(lat2)
     lng2 = float(lng2)
-    return round(ingrex.utils.calc_dist_hires(lat1, lng1, lat2, lng2) / 1000, 3)
+    return round(calc_dist_hires(lat1, lng1, lat2, lng2) / 1000, 3)
 
 def get_distance(link) -> str:
     """Calculate the distance for a given link."""
