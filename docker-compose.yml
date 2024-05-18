@@ -2,6 +2,11 @@ services:
   bot:
     container_name: BookmarksToNavlinks
     build: .
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    restart: unless-stopped
     volumes:
       - .:/app
-    command: python bookmarks2navlinkBot.py
+    command: python bookmarks2navlinkBot.py -v
