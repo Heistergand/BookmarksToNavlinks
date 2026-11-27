@@ -1,4 +1,4 @@
-.secrets
-.git
-.gitmodules
-
+**
+!dockerfile
+!requirements.txt
+!bookmarks2navlinkBot.py

@@ -1,20 +1,20 @@
-# Verwende das offizielle Python-Image als Basis
-FROM python:3.8-slim
+FROM python:3.13-slim
 
-# Setze das Arbeitsverzeichnis im Container
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Kopiere die Anforderungsdatei in das Arbeitsverzeichnis
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Installiere alle in der Anforderungsdatei aufgeführten Pakete
-RUN pip install --no-cache-dir -r requirements.txt
+COPY bookmarks2navlinkBot.py ./
 
-# Kopiere den Rest des Anwendungsverzeichnisses in das Arbeitsverzeichnis
-COPY . .
+USER 65534:65534
 
-# Mache den Port, auf dem die Anwendung läuft, nach außen hin zugänglich
-# EXPOSE 5000
-
-# Definiere den Befehl zum Starten der Anwendung
-CMD ["python", "bookmarks2navlinkBot.py"]
+CMD ["python", "bookmarks2navlinkBot.py", "-v"]

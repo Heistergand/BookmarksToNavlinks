@@ -1,12 +1,21 @@
 services:
   bot:
     container_name: BookmarksToNavlinks
-    build: .
+    build:
+      context: .
+      dockerfile: dockerfile
+    user: "${PUID:?PUID required}:${PGID:?PGID required}"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
     logging:
       options:
         max-size: "10m"
         max-file: "5"
     restart: unless-stopped
     volumes:
-      - .:/app
-    command: python bookmarks2navlinkBot.py -v
+      - ./.secrets:/app/.secrets:ro
