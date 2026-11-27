@@ -40,6 +40,24 @@ elif args.verbose:
 else:
     logging.basicConfig(format=logging_format, level=logging.WARNING)
 
+# Prevent sensitive HTTP request URLs from appearing in logs.
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+
+# Redact Telegram bot tokens from formatted logs and tracebacks.
+import re
+
+class SecretRedactingFormatter(logging.Formatter):
+    TOKEN_PATTERN = re.compile(r"[0-9]+:[A-Za-z0-9_-]{20,}")
+
+    def format(self, record):
+        message = super().format(record)
+        return self.TOKEN_PATTERN.sub("[REDACTED]", message)
+
+for handler in logging.getLogger().handlers:
+    handler.setFormatter(SecretRedactingFormatter(logging_format))
+
+
 
 def is_json(myjson: str) -> bool:
     try:
@@ -306,4 +324,8 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception:
+        logging.exception("Fatal bot error")
+        sys.exit(1)
