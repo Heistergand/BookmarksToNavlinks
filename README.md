@@ -19,19 +19,45 @@ Requirements: Docker and Docker Compose v2.
    ```
 
 4. Edit `.secrets` and enter your bot token and Telegram user ID.
-5. Build and start the container:
+5. Download and start the published Docker image:
 
    ```sh
-   docker compose build --pull --no-cache
-   docker compose up -d
+   docker compose pull
+   docker compose up -d --no-build
    ```
 
+## Local build
+
+To build the image from source instead of using Docker Hub,
+add the following line to your `.env` file:
+
+```ini
+BOT_IMAGE=bookmarkstonavlinks-bot:latest
+```
+
+Then build and start the container:
+
+```sh
+docker compose build --pull --no-cache
+docker compose up -d --no-build
+```
+
 ## Updates
+
+### Docker Hub
+
+```sh
+git pull --ff-only
+docker compose pull
+docker compose up -d --no-build
+```
+
+### Local build
 
 ```sh
 git pull --ff-only
 docker compose build --pull --no-cache
-docker compose up -d
+docker compose up -d --no-build
 ```
 
 ## Security
@@ -51,10 +77,15 @@ Never commit `.secrets` or `.env` to version control.
 
 ## Vulnerability scanning
 
-The container image can be scanned using Trivy:
+The published container image can be scanned using Trivy:
 
 ```sh
-trivy image --scanners vuln,secret bookmarkstonavlinks-bot:latest
+trivy image --scanners vuln,secret \
+    heistergand/iitc_bookmarks2navlink_telegram_bot:latest
 ```
 
 See [SECURITY.md](SECURITY.md) for known security findings.
+
+## Links
+
+- [Docker Hub](https://hub.docker.com/r/heistergand/iitc_bookmarks2navlink_telegram_bot)

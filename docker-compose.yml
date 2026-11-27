@@ -1,6 +1,7 @@
 services:
   bot:
     container_name: BookmarksToNavlinks
+    image: ${BOT_IMAGE:-heistergand/iitc_bookmarks2navlink_telegram_bot:latest}
     build:
       context: .
       dockerfile: dockerfile
