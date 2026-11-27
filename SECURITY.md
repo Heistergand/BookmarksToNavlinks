@@ -53,3 +53,23 @@ confirmed false positive. No scanner exclusion is configured.
 - Production deployment and Telegram bot response verified.
 
 Remaining vulnerabilities require ongoing monitoring.
+
+## Telegram token exposure in logs (2026-11-27)
+
+Fixed in commit c8521e7.
+
+- Suppressed verbose HTTPX and HTTPCore request logging.
+- Added token redaction to log messages and exception tracebacks.
+- Added exception handling at the application entry point.
+- Verified redaction using synthetic tokens.
+- Verified that production logs contain no recognizable Telegram tokens.
+
+Affected users should revoke previously exposed tokens via BotFather,
+update their .secrets file, and recreate their container using the
+corrected image (c8521e7 or latest).
+
+The affected Docker Hub tag 2de5e30 has been removed.
+Previously downloaded images must be updated manually.
+
+Redaction covers configured logging handlers, but does not guarantee
+protection against every possible direct output from third-party code.
